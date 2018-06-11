@@ -40,12 +40,13 @@ class ZAPHelper(object):
     timeout = 60
     _status_check_sleep = 10
 
-    def __init__(self, zap_path='', port=8090, url='http://127.0.0.1', api_key='', logger=None):
+    def __init__(self, zap_path='', port=8090, url='127.0.0.1', proxy='http://127.0.0.1', api_key='', logger=None):
         if os.path.isfile(zap_path):
             zap_path = os.path.dirname(zap_path)
         self.zap_path = zap_path
         self.port = port
-        self.proxy_url = '{0}:{1}'.format(url, self.port)
+        self.local_proxy = url
+        self.proxy_url = '{0}:{1}'.format('http://'+url, self.port)
         self.zap = ZAPv2(proxies={'http': self.proxy_url, 'https': self.proxy_url}, apikey=api_key)
         self.api_key = api_key
         self.logger = logger or console
@@ -72,7 +73,7 @@ class ZAPHelper(object):
                             'installed on your system using the --zap-path command line parameter or by ' +
                             'default using the ZAP_PATH environment variable.').format(self.zap_path))
 
-        zap_command = [executable_path, '-daemon', '-port', str(self.port), '-host', str(self.proxy_url)]
+        zap_command = [executable_path, '-daemon', '-port', str(self.port), '-host', str(self.local_proxy)]
         if options:
             extra_options = shlex.split(options)
             zap_command += extra_options
