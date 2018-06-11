@@ -72,7 +72,7 @@ class ZAPHelper(object):
                             'installed on your system using the --zap-path command line parameter or by ' +
                             'default using the ZAP_PATH environment variable.').format(self.zap_path))
 
-        zap_command = [executable_path, '-daemon', '-port', str(self.port)]
+        zap_command = [executable_path, '-daemon', '-port', str(self.port), '-host', str(self.proxy_url)]
         if options:
             extra_options = shlex.split(options)
             zap_command += extra_options
